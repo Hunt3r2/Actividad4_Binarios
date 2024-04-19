@@ -21,11 +21,13 @@ public class CopiaImagen {
     {
         try
         {
+        	//comprobamos que exista la subcarpeta, sino, que la cree
         	File subCarpeta = new File("src"+File.separator+"fotos"+File.separator+"fotos2");
             if (!subCarpeta.exists()) {
             	subCarpeta.mkdir();
             }
-        	
+            
+        	//
             FileInputStream lectorFB = new FileInputStream(new File(pathFichero));
             int valor = lectorFB.read();
             // int lectura
@@ -47,16 +49,16 @@ public class CopiaImagen {
         try {
             // Abrir
             FileInputStream lectorFB = new FileInputStream(new File(pathFicheroOrigen));
-            // Lectura
+            //leo el archivo
             int valor = lectorFB.read();
             int contador = 0;
-            // int lectura
+            //este bucle es para que este leyendo todos los bytes de la imagen
             while (valor != -1) {
             	datos[contador] = valor;
                 valor = lectorFB.read();
                 contador++;
             }
-            // Cerrar
+            //lo cierro
             lectorFB.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
@@ -70,12 +72,13 @@ public class CopiaImagen {
     public void escribirFicheroBinario(String pathFicheroOrigen, String pathFicheroDestino) {
         try {
         	
+        	//creo el archivo
         	File miFichero = new File(pathFicheroDestino);
         	miFichero.createNewFile();
             // Abrir
             FileOutputStream escritorFB = new FileOutputStream(new File(pathFicheroDestino));
             
-            //Escritura
+            //escribo en el los bytes que hay en la foto
             int cantidadBytes = this.contarBytes(pathFicheroOrigen);
             int[] datos = new int[cantidadBytes];
             this.rellenarVector(datos, pathFicheroOrigen);
@@ -83,8 +86,6 @@ public class CopiaImagen {
             for(int i = 0; i < datos.length; i++) {
             	escritorFB.write(datos[i]);
             }
-            
-            // Copiar
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -106,7 +107,7 @@ public class CopiaImagen {
             	numBytes++;
                 valor = lectorFB.read();
             }
-            // Cerrar
+            //lo cierro
             lectorFB.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
