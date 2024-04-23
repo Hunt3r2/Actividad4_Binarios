@@ -6,21 +6,15 @@ public class CopiaImagen {
     public static void main(String[] args) throws IOException {
         LectorEscritorFicheroBinario lectorEscritorBin = new LectorEscritorFicheroBinario();
 
-        
-        
         lectorEscritorBin.lecturaFicheroBinario("src" + File.separator + "fotos" + File.separator + "lebron.gif");
         lectorEscritorBin.escribirFicheroBinario("src" + File.separator + "fotos" + File.separator + "lebron.gif", "src" + File.separator + "fotos"+File.separator+"fotos2"+File.separator+"lebron_copia.gif");
-        
-        
     }
 }
     
     class LectorEscritorFicheroBinario {
 
-    public void lecturaFicheroBinario(String pathFichero) throws IOException
-    {
-        try
-        {
+    public void lecturaFicheroBinario(String pathFichero) throws IOException {
+        try {
         	//comprobamos que exista la subcarpeta, sino, que la cree
         	File subCarpeta = new File("src"+File.separator+"fotos"+File.separator+"fotos2");
             if (!subCarpeta.exists()) {
@@ -29,12 +23,12 @@ public class CopiaImagen {
             
         	//
             FileInputStream lectorFB = new FileInputStream(new File(pathFichero));
+            //lee los bytes uno a uno y los almacena dentro de valor
             int valor = lectorFB.read();
-            // int lectura
             while (valor != -1) {
                 valor = lectorFB.read();
             }
-            // Cerrar
+            //se cierra
             lectorFB.close();
         }
         catch (FileNotFoundException e) {
@@ -43,8 +37,6 @@ public class CopiaImagen {
         }
     }
   
-    
-    
     private void rellenarVector(int[] datos, String pathFicheroOrigen) {
         try {
             // Abrir
@@ -54,8 +46,10 @@ public class CopiaImagen {
             int contador = 0;
             //este bucle es para que este leyendo todos los bytes de la imagen
             while (valor != -1) {
+            	//guardamos dicho byte dentro del vector en la posicion del contador
             	datos[contador] = valor;
                 valor = lectorFB.read();
+                //aumeto el contador para que continue
                 contador++;
             }
             //lo cierro
@@ -70,8 +64,7 @@ public class CopiaImagen {
     }
     
     public void escribirFicheroBinario(String pathFicheroOrigen, String pathFicheroDestino) {
-        try {
-        	
+        try {	
         	//creo el archivo
         	File miFichero = new File(pathFicheroDestino);
         	miFichero.createNewFile();
@@ -83,6 +76,7 @@ public class CopiaImagen {
             int[] datos = new int[cantidadBytes];
             this.rellenarVector(datos, pathFicheroOrigen);
             
+            //escribimos el archivo con los bytes del vector
             for(int i = 0; i < datos.length; i++) {
             	escritorFB.write(datos[i]);
             }
@@ -99,9 +93,11 @@ public class CopiaImagen {
     	try {
             // Abrir
             FileInputStream lectorFB = new FileInputStream(new File(pathFicheroOrigen));
-            // Lectura
+
+            
+
+            //lee el archivo y aumenta el contador
             int valor = lectorFB.read();
-            // int lectura
             int posicion = 0;
             while (valor != -1) {
             	numBytes++;
@@ -116,7 +112,7 @@ public class CopiaImagen {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    	
+    	//devuelve el numero de bytes
     	return numBytes;
     }
-    }
+ }
