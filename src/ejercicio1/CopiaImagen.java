@@ -5,7 +5,7 @@ import java.io.*;
 public class CopiaImagen {
     public static void main(String[] args) throws IOException {
         LectorEscritorFicheroBinario lectorEscritorBin = new LectorEscritorFicheroBinario();
-
+        //creo los archivos 
         lectorEscritorBin.lecturaFicheroBinario("src" + File.separator + "fotos" + File.separator + "lebron.gif");
         lectorEscritorBin.escribirFicheroBinario("src" + File.separator + "fotos" + File.separator + "lebron.gif", "src" + File.separator + "fotos"+File.separator+"fotos2"+File.separator+"lebron_copia.gif");
     }
@@ -93,9 +93,6 @@ public class CopiaImagen {
     	try {
             // Abrir
             FileInputStream lectorFB = new FileInputStream(new File(pathFicheroOrigen));
-
-            
-
             //lee el archivo y aumenta el contador
             int valor = lectorFB.read();
             int posicion = 0;

@@ -97,9 +97,6 @@ public class Menu_principal extends JFrame {
              	lblBaile2.setVisible(false);
              } 
         });
-        
-        
-       
 
         JButton btnGuardar = new JButton("Guardar en fichero");
         btnGuardar.setFont(new Font("Century Gothic", Font.PLAIN, 11));
@@ -108,7 +105,12 @@ public class Menu_principal extends JFrame {
         btnGuardar.setFocusable(false);
         btnGuardar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                guardarEnFichero();
+                try {
+					guardarEnFichero();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         });
         btnGuardar.setBounds(232, 317, 161, 23);
@@ -136,7 +138,15 @@ public class Menu_principal extends JFrame {
         btnCargar.setFocusable(false);
         btnCargar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cargarDesdeFichero();
+                try {
+					cargarDeFichero();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         });
         btnCargar.setBounds(232, 351, 161, 23);
@@ -211,42 +221,39 @@ public class Menu_principal extends JFrame {
         table.setModel(model);
     }
 
-    private void guardarEnFichero() {
-    	//para que escriba en el fichero los libros guardados
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src"+ File.separator+"fichero" + File.separator + "libros.txt"))) {
+    private void guardarEnFichero() throws IOException {
+    	FileOutputStream flujoSalida = new FileOutputStream("src"+ File.separator+"fichero" + File.separator + "libros.txt");
+        try (ObjectOutputStream oos = new ObjectOutputStream(flujoSalida)) {
             for (int i = 0; i < contadorLibros; i++) {
-            	//escribe los libros que haya de uno en uno
                 oos.writeObject(libros[i]);
             }
-            JOptionPane.showMessageDialog(frame, "Libros guardados en fichero correctamente.");
+            JOptionPane.showMessageDialog(this, "Libros guardados en fichero correctamente.");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void cargarDesdeFichero() {
-    	//creo un objeto archivo que sea el fichero de texto
-        File archivo = new File("src"+ File.separator+"fichero" + File.separator + "libros.txt");
-        //si existe, que lea el archivo
-        if (archivo.exists()) {
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
-            	// reinicio el contador de libros
-                contadorLibros = 0; 
+
+    private void cargarDeFichero() throws IOException, ClassNotFoundException {
+        File file = new File("src"+ File.separator+"fichero" + File.separator + "libros.txt");
+        if (file.exists()) {
+        	FileInputStream flujoSalida = new FileInputStream("src"+ File.separator+"fichero" + File.separator + "libros.txt");
+            try (ObjectInputStream ois = new ObjectInputStream(flujoSalida)) {
+                contadorLibros = 0;
                 while (true) {
-                    try {
-						libros[contadorLibros++] = (Libro) ois.readObject();
-					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+                    Libro libro = (Libro) ois.readObject();
+                    if (libro != null) {
+                        libros[contadorLibros++] = libro;
+                    }
                 }
             } catch (EOFException e) {
-                //cuando alcance el final del archivo, que actualize la tabla con los libros cargados
-                actualizarTabla();
-                JOptionPane.showMessageDialog(frame, "Libros cargados desde fichero correctamente.");
+                // End of file reached, do nothing
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            actualizarTabla();
+            JOptionPane.showMessageDialog(this, "Libros cargados correctamente.");
         }
     }
+
 }
